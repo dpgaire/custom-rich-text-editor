@@ -1,0 +1,23 @@
+/* src/components/Editor.css */
+.editor-container {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.editor {
+    min-height: 300px;
+    padding: 10px;
+    outline: none;
+}
+
+.editor pre {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+.editor code {
+    font-family: 'Courier New', Courier, monospace;
+}
