@@ -1,17 +1,15 @@
-// src/components/Editor.js
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Toolbar from "./Toolbar";
 import "../styles/editor.css";
-import { useState } from "react";
 
-const Editor = () => {
+const Editor = ({ onContentChange }) => {
   const editorRef = useRef(null);
   const [editorContent, setEditorContent] = useState("");
 
   const handleCommand = (command, value = null) => {
     switch (command) {
       case "heading":
-        document.execCommand("formatBlock", false, value);
+        document.execCommand("formatBlock", false, "h3");
         break;
       case "alignLeft":
         document.execCommand("justifyLeft");
@@ -34,46 +32,65 @@ const Editor = () => {
           document.execCommand("insertImage", false, imageUrl);
         }
         break;
-      case "insertVideo":
-        const videoUrl = prompt("Enter the video URL");
-        if (videoUrl) {
-          const videoEmbed = `<iframe width="560" height="315" src="${videoUrl}" frameborder="0" allowfullscreen></iframe>`;
-          document.execCommand("insertHTML", false, videoEmbed);
-        }
+      case "insertShape":
+        insertShape(value); // Insert selected shape
         break;
-      case "insertTable":
-        insertTable(3, 3); // Example: insert 3x3 table
+      case "insertConnector":
+        startConnector(); // Start connector tool
         break;
       case "insertCode":
         insertCodeBlock();
         break;
-      case "undo":
-        document.execCommand("undo");
-        break;
-      case "redo":
-        document.execCommand("redo");
-        break;
-      case "foreColor":
-        document.execCommand("foreColor", false, value);
-        break;
       default:
-        document.execCommand(command, false, null);
+        document.execCommand(command, false, value);
     }
     updateEditorContent();
   };
 
-  // Insert table with given rows and columns
-  const insertTable = (rows, cols) => {
-    let table = "<table border='1'>";
-    for (let i = 0; i < rows; i++) {
-      table += "<tr>";
-      for (let j = 0; j < cols; j++) {
-        table += "<td>&nbsp;</td>";
-      }
-      table += "</tr>";
+  const insertShape = (shapeType) => {
+    const svgNS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("width", "100");
+    svg.setAttribute("height", "100");
+
+    let shape;
+    switch (shapeType) {
+      case "circle":
+        shape = document.createElementNS(svgNS, "circle");
+        shape.setAttribute("cx", "50");
+        shape.setAttribute("cy", "50");
+        shape.setAttribute("r", "40");
+        shape.setAttribute("stroke", "black");
+        shape.setAttribute("stroke-width", "3");
+        shape.setAttribute("fill", "red");
+        break;
+      case "rectangle":
+        shape = document.createElementNS(svgNS, "rect");
+        shape.setAttribute("width", "100");
+        shape.setAttribute("height", "50");
+        shape.setAttribute("stroke", "black");
+        shape.setAttribute("stroke-width", "3");
+        shape.setAttribute("fill", "blue");
+        break;
+      case "line":
+        shape = document.createElementNS(svgNS, "line");
+        shape.setAttribute("x1", "0");
+        shape.setAttribute("y1", "0");
+        shape.setAttribute("x2", "100");
+        shape.setAttribute("y2", "50");
+        shape.setAttribute("stroke", "green");
+        shape.setAttribute("stroke-width", "2");
+        break;
+      default:
+        return;
     }
-    table += "</table>";
-    document.execCommand("insertHTML", false, table);
+    svg.appendChild(shape);
+    editorRef.current.appendChild(svg);
+  };
+
+  const startConnector = () => {
+    // Start a line connector interaction between shapes (you can add mouse event listeners for drag and draw)
+    alert("Connector tool activated! Click on a shape to start connecting.");
   };
 
   const insertCodeBlock = () => {
@@ -91,10 +108,18 @@ const Editor = () => {
   const updateEditorContent = () => {
     const content = editorRef.current.innerHTML;
     setEditorContent(content);
-    // if (onContentChange) {
-    //   onContentChange(content); // Callback to pass the content back to parent component
-    // }
+    if (onContentChange) {
+      onContentChange(content); // Callback to pass the content back to parent component
+    }
   };
+
+  const copyCode = () => {
+    navigator.clipboard.writeText(editorContent).then(() => {
+      alert("Code copied to clipboard!");
+    });
+  };
+
+  console.log("editorContent", editorContent);
 
   return (
     <div className="editor-container">
@@ -106,6 +131,14 @@ const Editor = () => {
         onInput={updateEditorContent}
         suppressContentEditableWarning={true}
       ></div>
+      <div className="code-display">
+        <pre>
+          <code>{editorContent}</code>
+        </pre>
+        <button className="copy-button" onClick={copyCode}>
+          Copy Code
+        </button>
+      </div>
     </div>
   );
 };

@@ -6,7 +6,7 @@
 }
 
 .editor {
-    min-height: 300px;
+    max-height: 300px;
     padding: 10px;
     outline: none;
 }
@@ -20,4 +20,41 @@
 
 .editor code {
     font-family: 'Courier New', Courier, monospace;
+}
+
+.code-display {
+    max-height: 400px;
+    /* Maximum height */
+    overflow: hidden;
+    /* Hide overflow content */
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 100%;
+    /* Full width */
+    background-color: #f8f8f8;
+    /* Light background for visibility */
+}
+
+.code-display pre {
+    margin: 0;
+    /* Remove default margins */
+    white-space: pre-wrap;
+    /* Wrap long lines */
+}
+
+.copy-button {
+    margin-top: 10px;
+    /* Spacing above the button */
+    padding: 10px 15px;
+    background-color: #007bff;
+    /* Bootstrap primary color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background-color: #0056b3;
+    /* Darker shade on hover */
 }
