@@ -37,6 +37,7 @@ const Toolbar = ({ onCommand }) => {
 
       {/* Headings */}
       <select onChange={(e) => onCommand("heading", e.target.value)}>
+        <option value="">Select Heading</option>
         <option value="h1">Heading 1</option>
         <option value="h2">Heading 2</option>
         <option value="h3">Heading 3</option>
