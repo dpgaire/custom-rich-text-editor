@@ -119,8 +119,6 @@ const Editor = ({ onContentChange }) => {
     });
   };
 
-  console.log("editorContent", editorContent);
-
   return (
     <div className="editor-container">
       <Toolbar onCommand={handleCommand} />
@@ -135,10 +133,10 @@ const Editor = ({ onContentChange }) => {
         <pre>
           <code>{editorContent}</code>
         </pre>
-        <button className="copy-button" onClick={copyCode}>
-          Copy Code
-        </button>
       </div>
+      <button className="copy-button" onClick={copyCode}>
+        Copy Code
+      </button>
     </div>
   );
 };

@@ -23,9 +23,9 @@
 }
 
 .code-display {
-    max-height: 400px;
+    max-height: 280px;
     /* Maximum height */
-    overflow: hidden;
+    overflow-y: scroll;
     /* Hide overflow content */
     border: 1px solid #ccc;
     padding: 10px;
@@ -43,7 +43,7 @@
 }
 
 .copy-button {
-    margin-top: 10px;
+    margin: 10px;
     /* Spacing above the button */
     padding: 10px 15px;
     background-color: #007bff;
