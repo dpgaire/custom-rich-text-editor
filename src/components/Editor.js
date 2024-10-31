@@ -32,9 +32,6 @@ const Editor = ({ onContentChange }) => {
           document.execCommand("insertImage", false, imageUrl);
         }
         break;
-      case "insertShape":
-        insertShape(value); // Insert selected shape
-        break;
       case "insertConnector":
         startConnector(); // Start connector tool
         break;
@@ -45,47 +42,6 @@ const Editor = ({ onContentChange }) => {
         document.execCommand(command, false, value);
     }
     updateEditorContent();
-  };
-
-  const insertShape = (shapeType) => {
-    const svgNS = "http://www.w3.org/2000/svg";
-    const svg = document.createElementNS(svgNS, "svg");
-    svg.setAttribute("width", "100");
-    svg.setAttribute("height", "100");
-
-    let shape;
-    switch (shapeType) {
-      case "circle":
-        shape = document.createElementNS(svgNS, "circle");
-        shape.setAttribute("cx", "50");
-        shape.setAttribute("cy", "50");
-        shape.setAttribute("r", "40");
-        shape.setAttribute("stroke", "black");
-        shape.setAttribute("stroke-width", "3");
-        shape.setAttribute("fill", "red");
-        break;
-      case "rectangle":
-        shape = document.createElementNS(svgNS, "rect");
-        shape.setAttribute("width", "100");
-        shape.setAttribute("height", "50");
-        shape.setAttribute("stroke", "black");
-        shape.setAttribute("stroke-width", "3");
-        shape.setAttribute("fill", "blue");
-        break;
-      case "line":
-        shape = document.createElementNS(svgNS, "line");
-        shape.setAttribute("x1", "0");
-        shape.setAttribute("y1", "0");
-        shape.setAttribute("x2", "100");
-        shape.setAttribute("y2", "50");
-        shape.setAttribute("stroke", "green");
-        shape.setAttribute("stroke-width", "2");
-        break;
-      default:
-        return;
-    }
-    svg.appendChild(shape);
-    editorRef.current.appendChild(svg);
   };
 
   const startConnector = () => {
@@ -114,9 +70,13 @@ const Editor = ({ onContentChange }) => {
   };
 
   const copyCode = () => {
-    navigator.clipboard.writeText(editorContent).then(() => {
-      alert("Code copied to clipboard!");
-    });
+    const objectName = prompt("Enter the object name:");
+    if (objectName) {
+      const formattedCode = `${objectName} = \`${editorContent}\`;`;
+      navigator.clipboard.writeText(formattedCode).then(() => {
+        alert("Code copied to clipboard!");
+      });
+    }
   };
 
   return (
@@ -134,9 +94,11 @@ const Editor = ({ onContentChange }) => {
           <code>{editorContent}</code>
         </pre>
       </div>
-      <button className="copy-button" onClick={copyCode}>
-        Copy Code
-      </button>
+      {editorContent && (
+        <button className="copy-button" onClick={copyCode}>
+          Copy Code
+        </button>
+      )}
     </div>
   );
 };
