@@ -32,9 +32,6 @@ const Editor = ({ onContentChange }) => {
           document.execCommand("insertImage", false, imageUrl);
         }
         break;
-      case "insertConnector":
-        startConnector(); // Start connector tool
-        break;
       case "insertCode":
         insertCodeBlock();
         break;
@@ -42,11 +39,6 @@ const Editor = ({ onContentChange }) => {
         document.execCommand(command, false, value);
     }
     updateEditorContent();
-  };
-
-  const startConnector = () => {
-    // Start a line connector interaction between shapes (you can add mouse event listeners for drag and draw)
-    alert("Connector tool activated! Click on a shape to start connecting.");
   };
 
   const insertCodeBlock = () => {
