@@ -1,10 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Toolbar from "./Toolbar";
 import "../styles/editor.css";
 
-const Editor = ({ onContentChange }) => {
+const Editor = () => {
   const editorRef = useRef(null);
   const [editorContent, setEditorContent] = useState("");
+  const [isSaved, setIsSaved] = useState(false);
 
   const handleCommand = (command, value = null) => {
     switch (command) {
@@ -56,8 +57,9 @@ const Editor = ({ onContentChange }) => {
   const updateEditorContent = () => {
     const content = editorRef.current.innerHTML;
     setEditorContent(content);
-    if (onContentChange) {
-      onContentChange(content); // Callback to pass the content back to parent component
+
+    if (content) {
+      setIsSaved(true); // Callback to pass the content back to parent component
     }
   };
 
@@ -71,9 +73,42 @@ const Editor = ({ onContentChange }) => {
     }
   };
 
+  // Function to save content to local storage or an API
+  const saveContent = (content) => {
+    localStorage.setItem("editorContent", content); // You can change this to an API call if needed
+    setIsSaved(false); // Update save status to true
+  };
+
+  // Function to auto-save content at regular intervals
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (editorContent && !isSaved) {
+        saveContent(editorContent);
+      }
+    }, 5000); // Auto-save every 5 seconds
+
+    return () => clearInterval(intervalId);
+  }, [editorContent, isSaved]);
+
+  useEffect(() => {
+    const savedContent = localStorage.getItem("editorContent");
+    if (savedContent) {
+      setEditorContent(savedContent);
+      editorRef.current.innerHTML = savedContent;
+    }
+  }, []);
+
+  const handleSave = () => {
+    saveContent(editorContent); // Save content and update status
+  };
+
   return (
     <div className="editor-container">
-      <Toolbar onCommand={handleCommand} />
+      <Toolbar
+        onCommand={handleCommand}
+        onSave={handleSave}
+        isSaved={isSaved}
+      />
       <div
         ref={editorRef}
         className="editor"

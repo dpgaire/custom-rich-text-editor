@@ -18,12 +18,17 @@ import {
   FaRedo,
   FaVideo,
   FaPalette,
+  FaSave,
 } from "react-icons/fa";
 import "../styles/toolbar.css";
 
-const Toolbar = ({ onCommand }) => {
+const Toolbar = ({ onCommand, onSave, isSaved }) => {
+  console.log("isSaved", isSaved);
   return (
     <div className="toolbar">
+      <button onClick={onSave} style={{ color: isSaved ? "gray" : "darkgray" }}>
+        <FaSave />
+      </button>
       {/* Text formatting */}
       <button onClick={() => onCommand("bold")}>
         <FaBold />
