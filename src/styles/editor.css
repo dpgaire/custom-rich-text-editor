@@ -1,7 +1,21 @@
 /* src/components/Editor.css */
+
+body {
+    background-color: #f0f0f0;
+}
+
+.main_app {
+    max-width: 1360px;
+    margin: auto;
+    background-color: white;
+    padding: 10px;
+}
+
 .editor-container {
     border: 1px solid #ccc;
     border-radius: 4px;
+    max-width: 1360px;
+    margin: auto;
     overflow: hidden;
 }
 

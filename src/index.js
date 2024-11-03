@@ -5,7 +5,7 @@ import Editor from "./components/Editor";
 import "./styles/editor.css";
 
 const App = () => (
-  <div>
+  <div className="main_app">
     <h1>Custom Rich Text Editor</h1>
     <Editor />
   </div>

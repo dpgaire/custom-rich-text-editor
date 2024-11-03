@@ -4,8 +4,18 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 10px;
-    padding: 10px;
+    justify-content: space-between;
+    padding: 5px;
     border-bottom: 1px solid #ddd;
+}
+
+.toolbar_items>button,
+select,
+input[type="color"] {
+    padding: 5px 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 button,
@@ -13,7 +23,8 @@ select,
 input[type="color"] {
     padding: 5px;
     cursor: pointer;
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
+    border: none;
     background-color: white;
 }
 
