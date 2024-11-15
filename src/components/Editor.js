@@ -1,11 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import Toolbar from "./Toolbar";
+import MarkdownIt from "markdown-it";
+
 import "../styles/editor.css";
 
 const Editor = () => {
   const editorRef = useRef(null);
   const [editorContent, setEditorContent] = useState("");
   const [isSaved, setIsSaved] = useState(false);
+
+  const mdParser = new MarkdownIt(); // Initialize MarkdownIt parser
 
   const handleCommand = (command, value = null) => {
     switch (command) {
@@ -63,23 +67,21 @@ const Editor = () => {
     }
   };
 
-  const copyCode = () => {
+  const copyCode = (content) => {
     const objectName = prompt("Enter the object name:");
     if (objectName) {
-      const formattedCode = `${objectName} = \`${editorContent}\`;`;
+      const formattedCode = `${objectName} = \`${content}\`;`;
       navigator.clipboard.writeText(formattedCode).then(() => {
         alert("Code copied to clipboard!");
       });
     }
   };
 
-  // Function to save content to local storage or an API
   const saveContent = (content) => {
     localStorage.setItem("editorContent", content); // You can change this to an API call if needed
     setIsSaved(false); // Update save status to true
   };
 
-  // Function to auto-save content at regular intervals
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (editorContent && !isSaved) {
@@ -102,6 +104,9 @@ const Editor = () => {
     saveContent(editorContent); // Save content and update status
   };
 
+  // Render Markdown content to HTML using MarkdownIt
+  const renderedMarkdown = mdParser.render(editorContent);
+
   return (
     <div className="editor-container">
       <Toolbar
@@ -116,14 +121,35 @@ const Editor = () => {
         onInput={updateEditorContent}
         suppressContentEditableWarning={true}
       ></div>
+
+      {/* Display the raw Markdown content (editable) */}
       <div className="code-display">
+        <h2>Markdown</h2>
         <pre>
-          <code>{editorContent}</code>
+          <code>{editorContent}</code> {/* Raw Markdown content */}
         </pre>
       </div>
+
+      {/* Rendered HTML preview of the Markdown */}
+      <div className="code-display">
+        <h2>Rendered HTML</h2>
+        <div dangerouslySetInnerHTML={{ __html: renderedMarkdown }} />
+      </div>
+
+      {/* Copy Code Button - copy raw Markdown */}
       {editorContent && (
-        <button className="copy-button" onClick={copyCode}>
-          Copy Code
+        <button className="copy-button" onClick={() => copyCode(editorContent)}>
+          Copy Markdown
+        </button>
+      )}
+
+      {/* Copy Code Button - copy rendered HTML */}
+      {renderedMarkdown && (
+        <button
+          className="copy-button"
+          onClick={() => copyCode(renderedMarkdown)} // Copy the rendered HTML
+        >
+          Copy HTML
         </button>
       )}
     </div>
